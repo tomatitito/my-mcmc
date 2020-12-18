@@ -29,7 +29,7 @@ transitionST current logProb stepsize =
 
 sampleST :: Double -> (Double -> Double) -> Double -> ST s [Double]
 sampleST current logProb stepsize =
-  return $ unsafeInlinePrim $ do
+  do
     x <- transitionST current logProb stepsize
     xs <- sampleST x logProb stepsize
     return $! x:xs
@@ -38,28 +38,27 @@ acceptanceProbability :: Double -> Double -> (Double -> Double) -> Double
 acceptanceProbability current proposal logProb =
   min 1 (exp (logProb proposal - logProb current))
 
-propose :: PrimMonad m => Double -> Double -> m Double
-propose x stepsize = return $ unsafeInlinePrim $ do
-  gen <- createSystemRandom
+propose :: PrimMonad m => Gen (PrimState m) -> Double -> Double -> m Double
+propose gen x stepsize =
   uniformR ((x - stepsize), (x + stepsize)) gen
 
-acceptOrReject :: PrimMonad m => Double -> (Double -> Double) -> Double -> m Double
-acceptOrReject current logProb proposal =
-  return $ unsafeInlinePrim $ do
-    accept <- uniformR (0.0, 1.0) =<< createSystemRandom
+acceptOrReject :: PrimMonad m => Gen (PrimState m ) -> Double -> (Double -> Double) -> Double -> m Double
+acceptOrReject gen current logProb proposal =
+  do
+    accept <- uniformR (0.0, 1.0) gen
     if accept < acceptanceProbability current proposal logProb
       then return accept
       else return proposal
 
-transition :: PrimMonad m => Double -> (Double -> Double) -> Double -> m Double
-transition current logProb stepsize =
+transition :: PrimMonad m => Gen (PrimState m) -> Double -> (Double -> Double) -> Double -> m Double
+transition gen current logProb stepsize =
   propose' >>= acceptOrReject'
 
-  where propose' = propose current stepsize
-        acceptOrReject' = acceptOrReject current logProb
+  where propose' = propose gen current stepsize
+        acceptOrReject' = acceptOrReject gen current logProb
 
-sample :: PrimMonad m => Double -> (Double -> Double) -> Double -> m [Double]
-sample current logProb stepsize = do
-  x <- transition current logProb stepsize
-  -- TODO : Wwhy is runST necessary?
-  return $! x: (runST $ sample x logProb stepsize)
+sample :: PrimMonad m => Gen (PrimState m) -> Double -> (Double -> Double) -> Double -> m [Double]
+sample gen current logProb stepsize = do
+  x <- return 1.0 -- transition gen current logProb stepsize
+  xs <- sample gen x logProb stepsize
+  return $ x : xs
