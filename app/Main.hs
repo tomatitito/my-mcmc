@@ -1,14 +1,16 @@
 module Main where
 
 import qualified Data.Vector.Unboxed as U
-
 import Kernels.MetropolisHastings
 import System.Random.MWC
 import System.Random.Stateful
 
+import Kernels.MetropolisHastings
 
-logProb :: Double -> Double
-logProb x = (-0.5) * x**2
+lazyRandomList :: RandomGen g  => g -> [Int]
+lazyRandomList g = 
+  x : lazyRandomList gNext
+  where (x, gNext) = uniform g
 
 
 ioIsNotLazy :: Double -> IO [Double]
@@ -18,9 +20,6 @@ ioIsNotLazy x = do
 
 main :: IO ()
 main = do
-  -- in ST 
-  -- in IO
-   gen <- createSystemRandom
-  -- res <- sample gen 10 logProb 2
-   res <- ioIsNotLazy 1.0
-   print $ take 5 $ res
+  let pureGen = mkStdGen 42
+  let pureRandomList = lazyRandomList pureGen
+  print $ take 4 $ pureRandomList
