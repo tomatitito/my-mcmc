@@ -1,19 +1,26 @@
 module Main where
 
 import qualified Data.Vector.Unboxed as U
-import Control.Monad.ST (runST, ST)
+
 import Kernels.MetropolisHastings
+import System.Random.MWC
+import System.Random.Stateful
 
 
 logProb :: Double -> Double
 logProb x = (-0.5) * x**2
 
+
+ioIsNotLazy :: Double -> IO [Double]
+ioIsNotLazy x = do
+  xs <- ioIsNotLazy x
+  return $ x : xs
+
 main :: IO ()
 main = do
---  -- in ST 
---  let res :: ST s [Double]
---      res = sample 0 logProb 2
---  print $ take 10 $ runST res
+  -- in ST 
   -- in IO
-  res <- sample 10 logProb 2
-  print $ take 5 $ res
+   gen <- createSystemRandom
+  -- res <- sample gen 10 logProb 2
+   res <- ioIsNotLazy 1.0
+   print $ take 5 $ res
