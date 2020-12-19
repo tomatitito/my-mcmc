@@ -24,6 +24,7 @@ dependencies:
 - random >= 1.2.0
 - mwc-random
 - mwc-probability
+- random
 - vector
 - primitive
 #- MonadRandom

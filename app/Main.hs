@@ -2,18 +2,17 @@ module Main where
 
 import qualified Data.Vector.Unboxed as U
 import Control.Monad.ST (runST, ST)
+import System.Random.Stateful
+
 import Kernels.MetropolisHastings
 
-
-logProb :: Double -> Double
-logProb x = (-0.5) * x**2
+lazyRandomList :: RandomGen g  => g -> [Int]
+lazyRandomList g = 
+  x : lazyRandomList gNext
+  where (x, gNext) = uniform g
 
 main :: IO ()
 main = do
---  -- in ST 
---  let res :: ST s [Double]
---      res = sample 0 logProb 2
---  print $ take 10 $ runST res
-  -- in IO
-  res <- sample 10 logProb 2
-  print $ take 5 $ res
+  let pureGen = mkStdGen 42
+  let pureRandomList = lazyRandomList pureGen
+  print $ take 4 $ pureRandomList

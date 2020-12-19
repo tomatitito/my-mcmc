@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: f7c1d07ce7c60b0a4d57378a5aef959dd1970f4315a11e1dabbef21c4239d40a
+-- hash: f9b279c460846e64a282b6b84761210d8547426c622be2dc4aadd8d8418d8f88
 
 name:           my-mcmc
 version:        0.1.0.0
@@ -38,7 +38,7 @@ library
     , mwc-probability
     , mwc-random
     , primitive
-    , random >=1.2.0
+    , random
     , vector
   default-language: Haskell2010
 
@@ -55,7 +55,7 @@ executable my-mcmc-exe
     , mwc-random
     , my-mcmc
     , primitive
-    , random >=1.2.0
+    , random
     , vector
   default-language: Haskell2010
 
@@ -73,6 +73,6 @@ test-suite my-mcmc-test
     , mwc-random
     , my-mcmc
     , primitive
-    , random >=1.2.0
+    , random
     , vector
   default-language: Haskell2010
