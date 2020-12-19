@@ -1,0 +1,6 @@
+cradle:
+  stack:
+    - path: ./src
+      component: my-mcmc:lib
+    - path: ./app
+      component: my-mcmc:exe:my-mcmc-exe
