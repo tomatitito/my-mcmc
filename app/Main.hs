@@ -1,7 +1,8 @@
 module Main where
 
 import qualified Data.Vector.Unboxed as U
-import Control.Monad.ST (runST, ST)
+import Kernels.MetropolisHastings
+import System.Random.MWC
 import System.Random.Stateful
 
 import Kernels.MetropolisHastings
@@ -10,6 +11,12 @@ lazyRandomList :: RandomGen g  => g -> [Int]
 lazyRandomList g = 
   x : lazyRandomList gNext
   where (x, gNext) = uniform g
+
+
+ioIsNotLazy :: Double -> IO [Double]
+ioIsNotLazy x = do
+  xs <- ioIsNotLazy x
+  return $ x : xs
 
 main :: IO ()
 main = do

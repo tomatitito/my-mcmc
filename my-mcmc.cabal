@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: f9b279c460846e64a282b6b84761210d8547426c622be2dc4aadd8d8418d8f88
+-- hash: 6b51dddeb98ff9c19e7b91b45f945cb9aed69a0df9de87114472b45a449e6528
 
 name:           my-mcmc
 version:        0.1.0.0
@@ -36,7 +36,7 @@ library
   build-depends:
       base >=4.7 && <5
     , mwc-probability
-    , mwc-random
+    , mwc-random >=0.15.0.1
     , primitive
     , random
     , vector
@@ -52,7 +52,7 @@ executable my-mcmc-exe
   build-depends:
       base >=4.7 && <5
     , mwc-probability
-    , mwc-random
+    , mwc-random >=0.15.0.1
     , my-mcmc
     , primitive
     , random
@@ -70,7 +70,7 @@ test-suite my-mcmc-test
   build-depends:
       base >=4.7 && <5
     , mwc-probability
-    , mwc-random
+    , mwc-random >=0.15.0.1
     , my-mcmc
     , primitive
     , random
