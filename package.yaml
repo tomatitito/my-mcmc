@@ -27,6 +27,7 @@ dependencies:
 - random
 - vector
 - primitive
+- mtl >= 2.2.2
 #- MonadRandom
 
 library:
