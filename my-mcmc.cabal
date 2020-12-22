@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 6b51dddeb98ff9c19e7b91b45f945cb9aed69a0df9de87114472b45a449e6528
+-- hash: a39c835cc331c44a903a76120e12c926c505836e69d6df854ffbe0120f99cb9b
 
 name:           my-mcmc
 version:        0.1.0.0
@@ -29,12 +29,14 @@ library
   exposed-modules:
       Helpers
       Kernels.MetropolisHastings
+      Kernels.MetropolisHastingsLazy
   other-modules:
       Paths_my_mcmc
   hs-source-dirs:
       src
   build-depends:
       base >=4.7 && <5
+    , mtl
     , mwc-probability
     , mwc-random >=0.15.0.1
     , primitive
@@ -51,6 +53,7 @@ executable my-mcmc-exe
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
+    , mtl
     , mwc-probability
     , mwc-random >=0.15.0.1
     , my-mcmc
@@ -69,6 +72,7 @@ test-suite my-mcmc-test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
+    , mtl
     , mwc-probability
     , mwc-random >=0.15.0.1
     , my-mcmc
