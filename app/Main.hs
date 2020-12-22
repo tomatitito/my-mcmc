@@ -2,8 +2,8 @@ module Main where
 
 import qualified Data.Vector.Unboxed as U
 import Kernels.MetropolisHastings
-import System.Random.MWC
-import System.Random.Stateful
+import System.Random.MWC hiding (uniform)
+import System.Random.Stateful 
 
 import Kernels.MetropolisHastings
 
