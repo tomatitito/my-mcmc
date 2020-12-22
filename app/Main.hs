@@ -26,8 +26,9 @@ ioIsNotLazy x = do
 main :: IO ()
 main = do
   let pureGen = mkStdGen 42
+  -- Fred's Version:
   let pureRandomList = lazyRandomList pureGen
-  -- not so nice: get the list like this
+  -- my new Version:
   let lazyStateList = evalState (lazyRandomListWithState 5) pureGen
   print $ take 4 $ pureRandomList
   print lazyStateList
