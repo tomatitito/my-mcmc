@@ -1,17 +1,24 @@
 module Main where
 
+import Control.Monad.State.Lazy
 import qualified Data.Vector.Unboxed as U
+import Kernels.MetropolisHastings
 import Kernels.MetropolisHastingsLazy
+import qualified Helpers as H
 import System.Random.MWC hiding (uniform)
-import System.Random.Stateful 
-import Control.Monad.State.Lazy (evalState)
+import System.Random.Stateful
 
-
-lazyRandomList :: RandomGen g  => g -> [Int]
-lazyRandomList g = 
+lazyRandomList :: RandomGen g => g -> [Int]
+lazyRandomList g =
   x : lazyRandomList gNext
-  where (x, gNext) = uniform g
+  where
+    (x, gNext) = uniform g
 
+lazyRandomListWithState :: Int -> State StdGen [Int]
+lazyRandomListWithState = (`replicateM` randomInt)
+  where
+    randomInt :: State StdGen Int
+    randomInt = state $ uniform
 
 ioIsNotLazy :: Double -> IO [Double]
 ioIsNotLazy x = do
@@ -20,11 +27,12 @@ ioIsNotLazy x = do
 
 main :: IO ()
 main = do
-  let gen = mkStdGen 42
-      val = evalState (propose (1.0 :: Double) 0.5) gen
-      logProb x = -0.5 * x ** 2 
-      val2 = evalState (acceptOrReject (0.3 :: Double) 0.4 logProb) gen
-  print val2
---  let pureGen = mkStdGen 42
---  let pureRandomList = lazyRandomList pureGen
---  print $ take 4 $ pureRandomList
+  let n = 5
+      initial = 1.0
+      gen = mkStdGen 42
+      d = MhData {n = n, chain = [initial], gen = gen, logProb = H.logProb, stepsize = 0.1}
+      
+      simpleRes = simpleSample d
+      stateRes = sampleStateT initial gen n
+  print (chain simpleRes)
+  print stateRes

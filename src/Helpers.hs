@@ -7,6 +7,9 @@ import Control.Monad.ST
 import System.Random.MWC (uniformR, createSystemRandom, initialize, create, Gen, GenST, Variate, uniform)
 import System.Random.MWC.Distributions
 
+logProb :: (Num a, Fractional a, Floating a) => a -> a
+logProb x = -0.5 * (x**2)
+
 randomFloat :: IO Float
 randomFloat = uniformR (0, 1 :: Float) =<< createSystemRandom
 
