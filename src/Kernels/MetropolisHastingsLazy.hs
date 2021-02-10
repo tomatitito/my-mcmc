@@ -52,7 +52,17 @@ transitionStateT = StateT $ \i -> do
   gen <- get
   let (v', gen') = runState (transition i Helpers.logProb 0.9) gen
   put gen'
-  return (i, v') -- State Int (Int,Int)
+  return (i, v') -- State Double (Double, Double)
+ 
+-- State s a
+-- State (StdGen, Double) Double 
+transition' :: State (StdGen, Double) Double
+transition' = state $ \(g, a) -> 
+  let (r, g') = randomR (0.0, 1.0) g
+  in (r, (g', r))
+
+rus :: (Double, (StdGen, Double))
+rus = runState transition' (mkStdGen 42, 1.0)
 
 sampleStateT :: Double -> StdGen -> Int -> ([(Double, Double)], StdGen)
 sampleStateT initial gen n =
