@@ -15,4 +15,6 @@ main = do
       gen = mkStdGen 42
       
       stateRes = sampleStateT initial gen n
+      stateRes' = sampleStateT' initial gen n
   print stateRes
+  print stateRes'
