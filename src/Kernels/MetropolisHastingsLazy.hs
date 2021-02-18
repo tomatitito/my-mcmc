@@ -2,15 +2,18 @@ module Kernels.MetropolisHastingsLazy where
 
 import Control.Monad.State.Lazy
 import System.Random
+import Data.Coerce
 import qualified Helpers
+import Types
 
 acceptanceProbability :: Double -> Double -> Double
 acceptanceProbability current proposal =
-  min 1 (exp (Helpers.logProb proposal - Helpers.logProb current))
+  min 1 (exp (logProb proposal - logProb current))
+  where logProb = coerce Helpers.logProb 
 
 propose :: Double -> State StdGen Double
-propose x = state $ do
-  (proposal, newGen) <- uniformR (x - stepsize, x + stepsize)
+propose current = state $ do
+  (proposal, newGen) <- uniformR (current - stepsize, current + stepsize)
   return (proposal, newGen)
   where
     stepsize = 0.9

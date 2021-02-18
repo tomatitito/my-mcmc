@@ -1,14 +1,14 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 module Helpers where
 
-
+import Types
 import Control.Monad.Primitive
 import Control.Monad.ST
 import System.Random.MWC (uniformR, createSystemRandom, initialize, create, Gen, GenST, Variate, uniform)
 import System.Random.MWC.Distributions
 
-logProb :: (Num a, Fractional a, Floating a) => a -> a
-logProb x = -0.5 * (x**2)
+logProb :: LogProb
+logProb = LogProb (\x -> -0.5 * (x**2))
 
 randomFloat :: IO Float
 randomFloat = uniformR (0, 1 :: Float) =<< createSystemRandom
@@ -17,14 +17,14 @@ randomFloat'' :: ST s Float
 randomFloat'' = uniformR (0, 1) =<< create -- :: ST s Float
 
 randomFloat''' :: Gen s -> ST s Float
-randomFloat''' g = uniformR (0, 1) g
+randomFloat''' = uniformR (0, 1)
 
 randomDoubleBetween :: Double -> Double -> IO Double
 randomDoubleBetween a b = uniformR (a, b) =<< createSystemRandom
 
 randomDoubleBetween' :: Double -> Double -> ST s Double
 --see https://stackoverflow.com/questions/26448677/generation-of-infinite-list-of-ints-with-mwc-random
-randomDoubleBetween' low high = 
+randomDoubleBetween' low high =
   return $ unsafeInlinePrim $ do
     gen <- createSystemRandom
     -- for debugging use:
