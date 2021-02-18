@@ -56,12 +56,12 @@ transitionStateT logProb stepSize = StateT $ \i -> do
   put gen'
   return (i, v') -- State Double (Double, Double)
 
-sampleStateT :: LogProb -> Stepsize -> Double -> StdGen -> Int -> ([(Double, Double)], StdGen)
-sampleStateT logProb stepsize initial gen n =
+sampleStateT :: LogProb -> Stepsize -> Int -> Double -> StdGen -> ([(Double, Double)], StdGen)
+sampleStateT logProb stepsize n initial =
   let innerState = runStateT (transitionStateT logProb stepsize) initial
-  in runState (replicateM n innerState) gen
+  in runState (replicateM n innerState)
 
-sampleStateT' :: LogProb -> Stepsize -> Double -> StdGen -> Int -> ([Double], (StdGen, Double))
-sampleStateT' logProb stepsize initial gen n =
+sampleStateT' :: LogProb -> Stepsize -> Int -> Double -> StdGen -> ([Double], (StdGen, Double))
+sampleStateT' logProb stepsize n initial gen =
   runState (replicateM n transition'') (gen, initial)
   where transition'' = transition' logProb stepsize
