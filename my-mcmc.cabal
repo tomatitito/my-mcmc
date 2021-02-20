@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: a39c835cc331c44a903a76120e12c926c505836e69d6df854ffbe0120f99cb9b
+-- hash: e3387200826594f59cc2ee58b80110ded4c2ac2e6ccae72a965040871e5803a2
 
 name:           my-mcmc
 version:        0.1.0.0
@@ -30,6 +30,7 @@ library
       Helpers
       Kernels.MetropolisHastings
       Kernels.MetropolisHastingsLazy
+      Types
   other-modules:
       Paths_my_mcmc
   hs-source-dirs:
